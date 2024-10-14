@@ -97,7 +97,7 @@ public class Interpreter {
                 while (vars.getOrDefault(varName, 0) != 0){
                     execute(lines, loopStartIndex, loopEndIndex);
                 }
-                //skip to the end line of loop
+                //jump to the end line of loop
                 i = loopEndIndex;
             }else { //dealing the part of codes which are not while loop
                 int processLabel = -1;
@@ -168,6 +168,7 @@ public class Interpreter {
                 if (!trimmedLine.isEmpty())
                     code.append(trimmedLine).append("\n");
             }
+            reader.close();
 
             //split 'code' line by line to a string array 'lines'
             String[] lines = code.toString().split("\n");
