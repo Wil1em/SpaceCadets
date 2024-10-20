@@ -2,6 +2,24 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+# Ignore all .idea folder
+.idea/
+# Except specific files
+!.idea/codeStyles/
+!.idea/modules.xml
+!.idea/vcs.xml
+!.idea/libraries/
+# Ignore workspace settings, as they are user-specific
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries/
+.idea/assetWizardSettings.xml
+.idea/dataSources/
+.idea/dataSources.local.xml
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+.idea/misc.xml
 
 ### Eclipse ###
 .apt_generated
