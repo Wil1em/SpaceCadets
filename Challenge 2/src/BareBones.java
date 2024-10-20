@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class Interpreter {
+public class BareBones {
     public static final Map<String, Integer> vars = new HashMap<>();
     public static final Map<String, Integer> subStart = new HashMap<>();
     public static final Map<String, Integer> subEnd = new HashMap<>();
