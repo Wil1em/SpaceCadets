@@ -5,101 +5,135 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-//custom UnknownCommandException
-class UnknownCommandException extends Exception {
-    public UnknownCommandException(String message) {
-        super(message);
-    }
-
-    public UnknownCommandException(String message, Throwable cause) {
-        super(message, cause);
-    }
-}
-
 public class Interpreter {
     public static final Map<String, Integer> vars = new HashMap<>();
+    public static final Map<String, Integer> subStart = new HashMap<>();
+    public static final Map<String, Integer> subEnd = new HashMap<>();
 
-    public static void processVar(int label, String nameVar){
+    public static void processVar(int label, String nameVar, int currentLine){
         int value = 0;
         switch (label) {
             case 0:     //clear
                 vars.put(nameVar, value);
-//                System.out.println(nameVar + " = 0");
                 break;
             case 1:     //incr
-                try {
-                    if (vars.get(nameVar) == null)
-                        throw new IllegalStateException("Underspecification");
-                } catch (IllegalStateException e) {
-                    System.err.println("Underspecification: you should define a variable before use it.");
-                }
-                value = vars.getOrDefault(nameVar, 0) + 1;
+                if (notDefined(nameVar))
+                    defineVar(nameVar);
+                value = vars.get(nameVar) + 1;
                 vars.put(nameVar, value);
-//                System.out.println(nameVar + " = " + vars.get(nameVar));
                 break;
             case 2:     //decr
-                try {
-                    if (vars.get(nameVar) == null)
-                        throw new IllegalStateException("Underspecification");
-                    value = vars.getOrDefault(nameVar, 0) - 1;
-                    //Prevent negative values (throw exception but still try to run)
-                    if (value < 0)
-                        throw new ArithmeticException("Illegal variable");
-                } catch (IllegalStateException e) {
-                    System.err.println("Underspecification: you should define a variable before use it.");
-                } catch (ArithmeticException e){
+                if (notDefined(nameVar))
+                    defineVar(nameVar);
+                value = vars.get(nameVar) - 1;
+                //Prevent negative values
+                if (value < 0) {
                     System.err.println("Illegal variable: variables must be non-negative!");
                     value = 0;
                 }
                 vars.put(nameVar, value);
-//                System.out.println(nameVar + " = " + vars.get(nameVar));
                 break;
             case -1:
-                try{
-                    throw new UnknownCommandException("Unknown command：" + nameVar);
-                }catch (UnknownCommandException e){
-                    System.err.println("Unknown command: " + nameVar);
-                }
+                System.err.println("Error: unknown command: '" + nameVar + "' in the line " + (currentLine + 1));
         }
+
         System.out.println("Current variables:");
         printVariables();
         System.out.println();
     }
 
-    //execute Method：execute the BareBones program from startIndex to endIndex
+    //check if a variable is defined
+    public static boolean notDefined(String nameVar) {
+        return !vars.containsKey(nameVar);
+    }
+
+    //define a variable with an initial value of 0
+    public static void defineVar(String nameVar) {
+        System.err.println("Underspecification: you should define a variable before use it.");
+        vars.put(nameVar, 0);
+    }
+
+    //execute Method: execute the BareBones program from startIndex to endIndex
     //processLabel: 0 -> clear; 1 -> incr; 2 -> decr;
     public static void execute(String[] lines, int startIndex, int endIndex){
         for (int i = startIndex; i <= endIndex; i++){
             //check the ';' symbol of each line
-            try{
-                if (!lines[i].endsWith(";"))
-                    throw new IllegalStateException("Do not forget the ';'");
-            }catch (IllegalStateException e){
+            if (!lines[i].endsWith(";"))
                 System.err.println("Underspecification: please do not forget the ';' after each command.");
-            }
 
             //use String.split and regex(Regular Expression) to split reserved words of BareBones
             String[] commands = lines[i].split("[;\\s]+");
 
-            //dealing the while loop
+            //Register subroutine definitions
+            if (commands[0].equals("sub")) {
+                String subName = commands[1];
+                subStart.put(subName, i + 1);
+                int subEndIndex = findEnd(lines, i + 1, "end");
+                subEnd.put(subName, subEndIndex);
+                i = subEndIndex;
+                continue;
+            }
+            //Call subroutine
+            if (commands[0].equals("call")) {
+                String subName = commands[1];
+                if (subStart.containsKey(subName)) {
+                    int subStartIndex = subStart.get(subName);
+                    int subEndIndex = subEnd.get(subName);
+                    execute(lines, subStartIndex, subEndIndex - 1);
+                } else {
+                    System.err.println("Unknown subroutine: '" + subName + "' in the line " + (i + 1));
+                }
+                continue;
+            }
+
+            //dealing with the while loop
             if (commands[0].equals("while")){
                 String varName = commands[1];
                 int loopStartIndex = i + 1;
-                int loopEndIndex = findEnd(lines, loopStartIndex);
-                //use recursion to execute the code in the while loop
-                try {   //check whether defined before using the variable from the while loop condition
-                    if (vars.get(varName) == null)
-                        throw new IllegalStateException("Underspecification");
-                }catch (IllegalStateException e){
-                    System.err.println("Underspecification: you should define a variable before use it.");
-                    vars.put(varName, 0);   //solving the Underspecification Exception
-                }
-                while (vars.getOrDefault(varName, 0) != 0){
-                    execute(lines, loopStartIndex, loopEndIndex);
-                }
-                //jump to the end line of loop
+                int loopEndIndex = findEnd(lines, loopStartIndex, "end");
+
+                if (notDefined(varName))
+                    defineVar(varName);
+
+                while (vars.get(varName) != 0)
+                    execute(lines, loopStartIndex, loopEndIndex - 1);
                 i = loopEndIndex;
-            }else { //dealing the part of codes which are not while loop
+                continue;
+            }
+
+            //dealing with if/else statement
+            if (commands[0].equals("if")) {
+                String varName = commands[1];
+                int ifStartIndex = i + 1;
+                int ifEndIndex, elseEndIndex;
+
+                try {
+                    ifEndIndex = findEnd(lines, ifStartIndex, "else");
+                    elseEndIndex = findEnd(lines, ifEndIndex + 1, "end");
+
+                    if (notDefined(varName))
+                        defineVar(varName);
+
+                    if (vars.get(varName) != 0){
+                        execute(lines, ifStartIndex, ifEndIndex - 1);
+                    }
+                    else{
+                        execute(lines, ifEndIndex + 1, elseEndIndex - 1);
+                    }
+                    i = elseEndIndex;
+                } catch (IllegalArgumentException e) {  //No else block, only if-end
+                    ifEndIndex = findEnd(lines, ifStartIndex, "end");
+
+                    if (notDefined(varName))
+                        defineVar(varName);
+
+                    if (vars.get(varName) != 0)
+                        execute(lines, ifStartIndex, ifEndIndex - 1);
+                    i = ifEndIndex;
+                }
+            }
+            //dealing with commands that are not loops or conditionals
+            else {
                 int processLabel = -1;
                 for (String word : commands) {
 //                    System.out.println(word);
@@ -113,40 +147,31 @@ public class Interpreter {
                         case "decr":
                             processLabel = 2;
                             continue;
-                        case "end":
-                            continue;
                         default:
-                            try{
-                                //assume the specification for variables of BareBones is "[a-zA-Z]+"
-                                if (Pattern.matches("[a-zA-Z]+", word))
-                                    processVar(processLabel, word);
-                                else
-                                    throw new UnknownCommandException("Unknown command: '" + word + "' in the line " + (i+1));
-                            }catch (UnknownCommandException e){
-                                System.err.println("Unknown command: '" + word + "' in the line " + (i+1));
-                            }
+                            if (Pattern.matches("[a-zA-Z]+", word))
+                                processVar(processLabel, word, i);
+                            else
+                                System.err.println("Error: unknown command: '" + word + "' in the line " + (i + 1));
                     }
                 }
             }
         }
     }
 
-    public static int findEnd(String[] lines, int startIndex) {
-        //depth of loops
+    public static int findEnd(String[] lines, int startIndex, String endKeyword) {
         int depth = 1;
         for (int i = startIndex; i < lines.length; i++) {
             String currentLine = lines[i];
-            //dealing with the nested while loop
-            if (currentLine.startsWith("while"))
+            if (currentLine.startsWith("while") || currentLine.startsWith("if"))
                 depth++;
-            if (currentLine.startsWith("end")){
+            if (currentLine.startsWith(endKeyword)) {
                 depth--;
                 if (depth == 0)
                     return i;
             }
         }
         //if not find the matching 'end'
-        throw new IllegalArgumentException("No matching 'end' found.");
+        throw new IllegalArgumentException("No matching '" + endKeyword + "' found from the codes of line " + (startIndex + 1));
     }
 
     public static void printVariables(){
@@ -162,13 +187,13 @@ public class Interpreter {
 
             //store whole BareBones program to 'code'
             while ((line = reader.readLine()) != null){
-                //remove indentations and spaces
-                trimmedLine = line.trim();
-                //remove blank lines
-                if (!trimmedLine.isEmpty())
+                //remove indentations, spaces, and comments
+                trimmedLine = line.split("#", 2)[0].trim();
+                //remove blank lines and ignore comments
+                if (!trimmedLine.isEmpty()){
                     code.append(trimmedLine).append("\n");
+                }
             }
-            reader.close();
 
             //split 'code' line by line to a string array 'lines'
             String[] lines = code.toString().split("\n");

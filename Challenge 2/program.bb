@@ -1,22 +1,66 @@
-clear X;
-incr X;
-incr X;
-clear Y;
-incr Y;
-incr Y;
-incr Y;
-clear Z;
-while X not 0 do;
-   clear W;
-   while Y not 0 do;
-      incr Z;
-      incr W;
-      decr Y;
-   end;
-   while W not 0 do;
-      incr Y;
-      decr W;
-   end;
-   decr X;
+clear a;
+clear b;
+clear c;
+clear d;
+
+incr a;
+incr b;
+incr b;
+
+sub addThree;
+    incr c;
+    incr c;
+    incr c;
 end;
-incr Y;
+
+sub addFive;
+    incr a;
+    incr a;
+    incr a;
+    incr a;
+    incr a;
+end;
+
+call addThree;
+call addFive;
+
+if b not 0 do;
+    incr d;
+else;
+    incr c;
+end;
+
+sub nestedCondition;
+    if d not 0 do;
+        incr a;
+        if a not 0 do;
+            decr b;
+        else;
+            incr c;
+        end;
+    else;
+        incr d;
+    end;
+end;
+
+call nestedCondition;
+
+while b not 0 do;
+    decr b;
+    incr a;
+    call addThree;
+end;
+
+sub nestedLoops;
+    while d not 0 do;
+        decr d;
+        incr a;
+        while a not 0 do;
+            decr a;
+            incr b;
+        end;
+    end;
+end;
+
+call nestedLoops;
+
