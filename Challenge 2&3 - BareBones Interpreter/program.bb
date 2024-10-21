@@ -1,66 +1,28 @@
-clear a;
-clear b;
-clear c;
-clear d;
+# Clear variables m, n, p
+clear m;
+clear n;
+clear p;
 
-incr a;
-incr b;
-incr b;
+# Increment m and n
+incr m;   # m = 1
+incr n;   # n = 1
 
-sub addThree;
-    incr c;
-    incr c;
-    incr c;
+# Define subroutine to double increment p
+sub doubleIncrementP;
+    incr p;
+    incr p;
 end;
 
-sub addFive;
-    incr a;
-    incr a;
-    incr a;
-    incr a;
-    incr a;
-end;
-
-call addThree;
-call addFive;
-
-if b not 0 do;
-    incr d;
-else;
-    incr c;
-end;
-
-sub nestedCondition;
-    if d not 0 do;
-        incr a;
-        if a not 0 do;
-            decr b;
-        else;
-            incr c;
-        end;
+# Nested if-else inside while loop
+while m not 0 do;
+    decr m;  # m = 0
+    if n not 0 do;
+        call doubleIncrementP;  # p = 2
+        decr n;                 # n = 0
     else;
-        incr d;
+        incr p;
     end;
 end;
 
-call nestedCondition;
-
-while b not 0 do;
-    decr b;
-    incr a;
-    call addThree;
-end;
-
-sub nestedLoops;
-    while d not 0 do;
-        decr d;
-        incr a;
-        while a not 0 do;
-            decr a;
-            incr b;
-        end;
-    end;
-end;
-
-call nestedLoops;
-
+# Expected Output:
+# m = 0, n = 0, p = 2
