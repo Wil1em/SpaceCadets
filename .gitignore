@@ -1,4 +1,5 @@
 # IntelliJ IDEA project files
+./idea/
 !**/.idea/codeStyles/
 !**/.idea/inspectionProfiles/
 !**/.idea/misc.xml
@@ -11,6 +12,21 @@
 !**/src/main/**/out/
 !**/src/test/**/out/
 **/*.iml
+
+# VS Code
+**./vscode/
+
+# Eclipse
+**.apt_generated
+**.classpath
+**.factorypath
+**.project
+**.settings
+**.springBeans
+**.sts4-cache
+**.bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
 
 # Maven
 **/target/
