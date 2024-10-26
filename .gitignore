@@ -1,2 +1,46 @@
+# IntelliJ IDEA project files
+!**/.idea/codeStyles/
+!**/.idea/inspectionProfiles/
+!**/.idea/misc.xml
+!**/.idea/modules.xml
+!**/.idea/vcs.xml
+!**.idea/libraries/
+!**/.idea/runConfigurations/
+**/.idea/*
+**/out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+**/*.iml
 
-.DS_Store
+# Maven
+**/target/
+**/pom.xml.tag
+**/pom.xml.releaseBackup
+**/pom.xml.versionsBackup
+**/pom.xml.next
+**/release.properties
+
+# Gradle
+**/.gradle/
+**/build/
+!**/gradle-wrapper.jar
+!**/gradle-wrapper.properties
+
+# OS
+**/.DS_Store
+**/.AppleDouble
+**/.LSOverride
+**/Thumbs.db
+**/ehthumbs.db
+**/Desktop.ini
+
+# Log and temp files
+**/*.log
+**/logs/
+**/.idea/logs/
+**/.idea/usage.statistics.xml
+**/*.swp
+**/*.swo
+**/*.bak
+**/*.tmp
+**/*.orig
