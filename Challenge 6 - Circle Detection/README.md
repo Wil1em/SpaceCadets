@@ -3,18 +3,18 @@
 ## Preview
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Wil1em/SpaceCadets/refs/heads/main/Challenge%206%20-%20Circle%20Detection/images/1.png" alt="1.png" style="zoom:33%;" />
-  <img src="https://raw.githubusercontent.com/Wil1em/SpaceCadets/refs/heads/main/Challenge%206%20-%20Circle%20Detection/images/out/1.png" alt="out_1.png" style="zoom:33%;" />
+  <img src="https://raw.githubusercontent.com/Wil1em/SpaceCadets/refs/heads/main/Challenge%206%20-%20Circle%20Detection/images/1.png" alt="1.png" width="45%" />
+  <img src="https://raw.githubusercontent.com/Wil1em/SpaceCadets/refs/heads/main/Challenge%206%20-%20Circle%20Detection/images/out/1.png" alt="out_1.png" width="45%" />
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Wil1em/SpaceCadets/refs/heads/main/Challenge%206%20-%20Circle%20Detection/images/2.png" alt="1.png" style="zoom:66%;" />
-  <img src="https://raw.githubusercontent.com/Wil1em/SpaceCadets/refs/heads/main/Challenge%206%20-%20Circle%20Detection/images/out/2.png" alt="out_1.png" style="zoom:60%;" />
+  <img src="https://raw.githubusercontent.com/Wil1em/SpaceCadets/refs/heads/main/Challenge%206%20-%20Circle%20Detection/images/2.png" alt="1.png" width="45%" />
+  <img src="https://raw.githubusercontent.com/Wil1em/SpaceCadets/refs/heads/main/Challenge%206%20-%20Circle%20Detection/images/out/2.png" alt="out_1.png" width="45%" />
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Wil1em/SpaceCadets/refs/heads/main/Challenge%206%20-%20Circle%20Detection/images/3.png" alt="1.png" style="zoom:80%;" />
-  <img src="https://raw.githubusercontent.com/Wil1em/SpaceCadets/refs/heads/main/Challenge%206%20-%20Circle%20Detection/images/out/3.png" alt="out_1.png" style="zoom:80%;" />
+  <img src="https://raw.githubusercontent.com/Wil1em/SpaceCadets/refs/heads/main/Challenge%206%20-%20Circle%20Detection/images/3.png" alt="1.png" width="45%" />
+  <img src="https://raw.githubusercontent.com/Wil1em/SpaceCadets/refs/heads/main/Challenge%206%20-%20Circle%20Detection/images/out/3.png" alt="out_1.png" width="45%" />
 </p>
 
 ## Recommend Watching
